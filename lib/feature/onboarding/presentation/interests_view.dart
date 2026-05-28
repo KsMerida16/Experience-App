@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:experience_app/feature/onboarding/state/onboarding_provider.dart';
 import 'package:experience_app/feature/onboarding/widgets/custom_buttom.dart';
+import 'package:go_router/go_router.dart';
+import 'package:experience_app/core/navigation/router.dart';
 
 class InterestsView  extends ConsumerWidget{
   const InterestsView({super.key});
@@ -108,13 +110,7 @@ class InterestsView  extends ConsumerWidget{
               CustomButtom(
                 text: 'Finish',
                 onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(
-                        'Selected ${selected.length} interests'
-                      ),
-                    ),
-                  );
+                  context.goNamed(Routes.home);
                 },
               ),
             ],
