@@ -1,17 +1,16 @@
-import 'package:flutter/material.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class Product {
-  final String name;
-  final double price;
-  final String description;
-  final List<String> sizes;
-  final List<Color> colors;
+part 'product.freezed.dart';
 
-  const Product({
-    required this.name,
-    required this.price,
-    required this.description,
-    required this.sizes,
-    required this.colors,
-  });
+@freezed
+sealed class Product with _$Product {
+  const factory Product({
+    required String id,
+    required String name,
+    required String description,
+    required double price,
+    required List<String> sizes,
+    required List<String> colorsHex,
+    @Default('') String imageUrl,
+  }) = _Product;
 }

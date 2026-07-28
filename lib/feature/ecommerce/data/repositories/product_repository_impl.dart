@@ -1,24 +1,26 @@
+import 'package:experience_app/feature/ecommerce/data/data_source/firebase_product_data_source.dart';
 import 'package:experience_app/feature/ecommerce/domain/entities/product.dart';
 import 'package:experience_app/feature/ecommerce/domain/repositories/product_repository.dart';
-import 'package:experience_app/feature/ecommerce/data/data_source/product_local_data_source.dart';
 
 class ProductRepositoryImpl implements ProductRepository {
-  final ProductLocalDataSource dataSource;
+  final FirebaseProductDataSource _dataSource;
 
-  ProductRepositoryImpl(this.dataSource);
+  ProductRepositoryImpl(this._dataSource);
 
   @override
-  List<Product> getProducts() {
-    final models = dataSource.getProducts();
+  Future<List<Product>> getProducts() => _dataSource.getProducts();
 
-    return models.map((model) {
-      return Product(
-        name: model.title,
-        price: model.cost,
-        description: model.description,
-        sizes: model.sizes,
-        colors: model.colors,
-      );
-    }).toList();
-  }
+  @override
+  Future<Product> createProduct(Product product) =>
+      _dataSource.createProduct(product);
+
+  @override
+  Future<void> updateProduct(Product product) =>
+      _dataSource.updateProduct(product);
+
+  @override
+  Future<void> deleteProduct(String id) => _dataSource.deleteProduct(id);
+
+  @override
+  Stream<List<Product>> streamProducts() => _dataSource.streamProducts();
 }

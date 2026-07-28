@@ -1,15 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-// Usamos NotifierProvider en lugar de StateNotifierProvider
 final selectedInterestsProvider =
     NotifierProvider<InterestsNotifier, List<String>>(() {
-  return InterestsNotifier();
-});
+      return InterestsNotifier();
+    });
 
 class InterestsNotifier extends Notifier<List<String>> {
   @override
   List<String> build() {
-    // Estado inicial
     return [];
   }
 

@@ -106,7 +106,7 @@ class BagView extends ConsumerWidget {
                                     color: Color(0xFF006FFD),
                                   ),
                                   Text(
-                                    'Q ${(item.total).toStringAsFixed(2)}',
+                                    '\$ ${(item.total).toStringAsFixed(2)}',
                                     style: const TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w700,
@@ -131,7 +131,7 @@ class BagView extends ConsumerWidget {
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  'Q ${notifier.totalPrice.toStringAsFixed(2)}',
+                  '\$ ${notifier.totalPrice.toStringAsFixed(2)}',
                   style: const TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,

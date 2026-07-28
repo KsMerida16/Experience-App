@@ -7,18 +7,38 @@ import 'package:experience_app/feature/payment/presentation/provider/payment_pro
 import 'package:flutter/services.dart';
 
 class AddCardView extends ConsumerStatefulWidget {
-  const AddCardView({super.key});
+  final CreditCardEntity? card;
+
+  const AddCardView({super.key, this.card});
+
+  bool get isEditing => card != null;
+
   @override
   ConsumerState<AddCardView> createState() => _AddCardViewState();
 }
 
 class _AddCardViewState extends ConsumerState<AddCardView> {
-  final holderController = TextEditingController();
-  final numberController = TextEditingController();
-  final expiryController = TextEditingController();
+  late final TextEditingController holderController;
+  late final TextEditingController numberController;
+  late final TextEditingController expiryController;
   final cvvController = TextEditingController();
 
-  /// DETECT CARD BRAND
+  bool isSubmitting = false;
+
+  @override
+  void initState() {
+    super.initState();
+    holderController = TextEditingController(
+      text: widget.card?.holderName ?? '',
+    );
+    numberController = TextEditingController(
+      text: formatCardNumber(widget.card?.cardNumber ?? ''),
+    );
+    expiryController = TextEditingController(
+      text: widget.card?.expiryDate ?? '',
+    );
+  }
+
   String detectCardBrand(String number) {
     if (number.startsWith('4')) {
       return 'Visa';
@@ -35,7 +55,6 @@ class _AddCardViewState extends ConsumerState<AddCardView> {
     return 'Card';
   }
 
-  /// CARD COLORS
   List<Color> getCardColors(String brand) {
     switch (brand) {
       case 'Visa':
@@ -51,7 +70,6 @@ class _AddCardViewState extends ConsumerState<AddCardView> {
     }
   }
 
-  /// FORMAT CARD NUMBER
   String formatCardNumber(String text) {
     text = text.replaceAll(' ', '');
     final buffer = StringBuffer();
@@ -76,7 +94,6 @@ class _AddCardViewState extends ConsumerState<AddCardView> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              /// HEADER
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -92,16 +109,18 @@ class _AddCardViewState extends ConsumerState<AddCardView> {
                       ),
                     ),
                   ),
-                  const Text(
-                    'Add Card',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  Text(
+                    widget.isEditing ? 'Edit Card' : 'Add Card',
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(width: 50),
                 ],
               ),
               const SizedBox(height: 32),
 
-              /// CARD PREVIEW
               Container(
                 width: double.infinity,
                 height: 220,
@@ -117,7 +136,6 @@ class _AddCardViewState extends ConsumerState<AddCardView> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    /// BRAND
                     Align(
                       alignment: Alignment.topRight,
                       child: Text(
@@ -131,7 +149,6 @@ class _AddCardViewState extends ConsumerState<AddCardView> {
                     ),
                     const Spacer(),
 
-                    /// CARD NUMBER
                     Text(
                       numberController.text.isEmpty
                           ? 'XXXX XXXX XXXX XXXX'
@@ -147,7 +164,6 @@ class _AddCardViewState extends ConsumerState<AddCardView> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        /// HOLDER
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -172,7 +188,6 @@ class _AddCardViewState extends ConsumerState<AddCardView> {
                           ],
                         ),
 
-                        /// EXPIRY
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -203,7 +218,6 @@ class _AddCardViewState extends ConsumerState<AddCardView> {
               ),
               const SizedBox(height: 36),
 
-              /// HOLDER INPUT
               _buildInput(
                 label: 'Card Holder',
                 controller: holderController,
@@ -211,7 +225,6 @@ class _AddCardViewState extends ConsumerState<AddCardView> {
               ),
               const SizedBox(height: 20),
 
-              /// NUMBER INPUT
               _buildInput(
                 label: 'Card Number',
                 controller: numberController,
@@ -255,7 +268,6 @@ class _AddCardViewState extends ConsumerState<AddCardView> {
               ),
               const Spacer(),
 
-              /// BUTTON
               SizedBox(
                 width: double.infinity,
                 height: 58,
@@ -266,27 +278,51 @@ class _AddCardViewState extends ConsumerState<AddCardView> {
                       borderRadius: BorderRadius.circular(18),
                     ),
                   ),
-                  onPressed: () async {
-                    final card = CreditCardEntity(
-                      holderName: holderController.text,
-                      cardNumber: numberController.text,
-                      expiryDate: expiryController.text,
-                      cvv: cvvController.text,
-                      brand: detectCardBrand(numberController.text),
-                    );
-                    await ref.read(paymentProvider.notifier).addCard(card);
-                    if (context.mounted) {
-                      context.pop();
-                    }
-                  },
-                  child: const Text(
-                    'Save Card',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                  ),
+                  onPressed: isSubmitting
+                      ? null
+                      : () async {
+                          setState(() => isSubmitting = true);
+
+                          final card = CreditCardEntity(
+                            id: widget.card?.id ?? '',
+                            holderName: holderController.text,
+                            cardNumber: numberController.text,
+                            expiryDate: expiryController.text,
+                            cvv: cvvController.text,
+                            brand: detectCardBrand(numberController.text),
+                          );
+
+                          if (widget.isEditing) {
+                            await ref
+                                .read(paymentProvider.notifier)
+                                .editCard(card);
+                          } else {
+                            await ref
+                                .read(paymentProvider.notifier)
+                                .addCard(card);
+                          }
+
+                          if (context.mounted) {
+                            context.pop();
+                          }
+                        },
+                  child: isSubmitting
+                      ? const SizedBox(
+                          width: 22,
+                          height: 22,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2.5,
+                          ),
+                        )
+                      : Text(
+                          widget.isEditing ? 'Save Changes' : 'Save Card',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
                 ),
               ),
             ],

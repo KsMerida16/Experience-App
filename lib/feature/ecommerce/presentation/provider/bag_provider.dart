@@ -67,6 +67,11 @@ class BagNotifier extends Notifier<List<CarItem>> {
     await saveBag();
   }
 
+  Future<void> clearBag() async {
+    state = [];
+    await saveBag();
+  }
+
   double get totalPrice {
     double total = 0;
     for (final item in state) {
@@ -78,6 +83,7 @@ class BagNotifier extends Notifier<List<CarItem>> {
   Future<void> saveBag() async {
     final data = state.map((item) {
       return {
+        'id': item.product.id,
         'name': item.product.name,
         'price': item.product.price,
         'description': item.product.description,
@@ -94,11 +100,12 @@ class BagNotifier extends Notifier<List<CarItem>> {
     final loadedItems = data.map<CarItem>((item) {
       return CarItem(
         product: Product(
+          id: item['id'] ?? '',
           name: item['name'],
           price: item['price'],
           description: item['description'],
-          sizes: [],
-          colors: [],
+          sizes: const [],
+          colorsHex: const [],
         ),
         quantity: item['quantity'],
         selectedSize: item['size'],

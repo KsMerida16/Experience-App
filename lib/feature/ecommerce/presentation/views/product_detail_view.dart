@@ -1,3 +1,4 @@
+import 'package:experience_app/core/utils/color_utils.dart';
 import 'package:experience_app/feature/ecommerce/domain/entities/product.dart';
 import 'package:experience_app/feature/ecommerce/presentation/provider/bag_provider.dart';
 import 'package:flutter/material.dart';
@@ -26,20 +27,31 @@ class _ProductDetailViewState extends ConsumerState<ProductDetailView> {
       body: SafeArea(
         child: Column(
           children: [
-            //IMG
             Stack(
               children: [
                 Container(
                   height: 320,
                   width: double.infinity,
                   color: const Color(0xFFEAF2FF),
-                  child: const Center(
-                    child: Icon(
-                      Icons.image_outlined,
-                      size: 32,
-                      color: Color(0xFFB4DBFF),
-                    ),
-                  ),
+                  child: (widget.product.imageUrl.isNotEmpty)
+                      ? Image.network(
+                          widget.product.imageUrl,
+                          fit: BoxFit.contain,
+                          errorBuilder: (_, __, ___) => const Center(
+                            child: Icon(
+                              Icons.image_outlined,
+                              size: 32,
+                              color: Color(0xFFB4DBFF),
+                            ),
+                          ),
+                        )
+                      : const Center(
+                          child: Icon(
+                            Icons.image_outlined,
+                            size: 32,
+                            color: Color(0xFFB4DBFF),
+                          ),
+                        ),
                 ),
                 Positioned(
                   top: 12,
@@ -82,7 +94,6 @@ class _ProductDetailViewState extends ConsumerState<ProductDetailView> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    //name and fav
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -102,7 +113,7 @@ class _ProductDetailViewState extends ConsumerState<ProductDetailView> {
                       ],
                     ),
                     Text(
-                      'Q ${widget.product.price.toStringAsFixed(2)}',
+                      '\$ ${widget.product.price.toStringAsFixed(2)}',
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w400,
@@ -121,7 +132,6 @@ class _ProductDetailViewState extends ConsumerState<ProductDetailView> {
                     ),
                     const SizedBox(height: 28),
 
-                    //size
                     const Text(
                       'Size',
                       style: TextStyle(
@@ -170,7 +180,6 @@ class _ProductDetailViewState extends ConsumerState<ProductDetailView> {
                     ),
                     const SizedBox(height: 28),
 
-                    //color
                     const Text(
                       'Color',
                       style: TextStyle(
@@ -182,7 +191,7 @@ class _ProductDetailViewState extends ConsumerState<ProductDetailView> {
 
                     Row(
                       children: List.generate(
-                        widget.product.colors.length,
+                        widget.product.colorsHex.length,
                         (index) => GestureDetector(
                           onTap: () {
                             setState(() {
@@ -198,7 +207,9 @@ class _ProductDetailViewState extends ConsumerState<ProductDetailView> {
                                   width: 34,
                                   height: 34,
                                   decoration: BoxDecoration(
-                                    color: widget.product.colors[index],
+                                    color: ColorUtils.hexToColor(
+                                      widget.product.colorsHex[index],
+                                    ),
                                     shape: BoxShape.circle,
                                   ),
                                 ),
@@ -244,7 +255,9 @@ class _ProductDetailViewState extends ConsumerState<ProductDetailView> {
                               .addProduct(
                                 widget.product,
                                 widget.product.sizes[selectedSize],
-                                widget.product.colors[selectedColor],
+                                ColorUtils.hexToColor(
+                                  widget.product.colorsHex[selectedColor],
+                                ),
                               );
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(

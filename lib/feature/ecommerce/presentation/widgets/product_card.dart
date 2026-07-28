@@ -3,8 +3,14 @@ import 'package:flutter/material.dart';
 class ProductCard extends StatelessWidget {
   final String name;
   final double price;
+  final String? imageUrl;
 
-  const ProductCard({super.key, required this.name, required this.price});
+  const ProductCard({
+    super.key,
+    required this.name,
+    required this.price,
+    this.imageUrl,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -18,21 +24,34 @@ class ProductCard extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Container(
-            height: 140,
-            decoration: BoxDecoration(
-              color: const Color(0xFFEAF2FF),
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(16),
-                topRight: Radius.circular(16),
-              ),
+          ClipRRect(
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(16),
+              topRight: Radius.circular(16),
             ),
-            child: const Center(
-              child: Icon(
-                Icons.image_outlined,
-                size: 45,
-                color: Color(0xFFB4DBFF),
-              ),
+            child: Container(
+              height: 140,
+              width: double.infinity,
+              color: const Color(0xFFEAF2FF),
+              child: (imageUrl != null && imageUrl!.isNotEmpty)
+                  ? Image.network(
+                      imageUrl!,
+                      fit: BoxFit.contain,
+                      errorBuilder: (_, __, ___) => const Center(
+                        child: Icon(
+                          Icons.image_outlined,
+                          size: 45,
+                          color: Color(0xFFB4DBFF),
+                        ),
+                      ),
+                    )
+                  : const Center(
+                      child: Icon(
+                        Icons.image_outlined,
+                        size: 45,
+                        color: Color(0xFFB4DBFF),
+                      ),
+                    ),
             ),
           ),
           Expanded(
@@ -60,7 +79,7 @@ class ProductCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    'Q ${price.toStringAsFixed(2)}',
+                    '\$ ${price.toStringAsFixed(2)}',
                     textAlign: TextAlign.left,
                     style: const TextStyle(
                       fontSize: 14,

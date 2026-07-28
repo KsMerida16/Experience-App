@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:experience_app/feature/ecommerce/data/models/product_model.dart';
 
-class ProductLocalDataSource {
+/*class ProductLocalDataSource {
   List<ProductModel> getProducts() {
     return [
       ProductModel(
+        id: '1',
         title: 'Amazing T-shirt',
         cost: 12,
         description:
@@ -18,6 +19,7 @@ class ProductLocalDataSource {
         ],
       ),
       ProductModel(
+        id: '2',
         title: 'Faboulous Pants',
         cost: 15,
         description: 'Comfortable casual wear',
@@ -25,6 +27,7 @@ class ProductLocalDataSource {
         colors: [Colors.black, Colors.brown, Colors.white],
       ),
       ProductModel(
+        id: '3',
         title: 'Spectacular Dress',
         cost: 20,
         description: 'Comfortable casual wear',
@@ -32,6 +35,7 @@ class ProductLocalDataSource {
         colors: [Colors.black, Colors.white],
       ),
       ProductModel(
+        id: '4',
         title: 'Stunning Jacket',
         cost: 18,
         description: 'Comfortable wear',
@@ -40,4 +44,4 @@ class ProductLocalDataSource {
       ),
     ];
   }
-}
+}*/
