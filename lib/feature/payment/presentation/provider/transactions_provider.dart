@@ -11,7 +11,25 @@ final transactionDataSourceProvider = Provider<FirebaseTransactionDataSource>((
 
 final transactionsProvider = StreamProvider<List<PaymentTransaction>>((ref) {
   final uid = ref.watch(authProvider).value?.uid;
-  if (uid == null) return const Stream.empty();
+
+  if (uid == null) {
+    return const Stream.empty();
+  }
+
   final ds = ref.read(transactionDataSourceProvider);
+
   return ds.streamTransactions(uid);
+});
+
+// ============================================================
+// VENTA ESPECÍFICA
+// ============================================================
+
+final saleByIdProvider = FutureProvider.family<PaymentTransaction?, String>((
+  ref,
+  saleId,
+) async {
+  final ds = ref.read(transactionDataSourceProvider);
+
+  return ds.getSaleById(saleId);
 });

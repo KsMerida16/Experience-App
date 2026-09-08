@@ -5,7 +5,7 @@ import 'package:experience_app/feature/onboarding/widgets/custom_buttom.dart';
 import 'package:go_router/go_router.dart';
 import 'package:experience_app/core/navigation/router.dart';
 
-class InterestsView  extends ConsumerWidget{
+class InterestsView extends ConsumerWidget {
   const InterestsView({super.key});
 
   static const List<String> interests = [
@@ -16,7 +16,7 @@ class InterestsView  extends ConsumerWidget{
     'User Testing',
     'Service Design',
     'Strategy',
-    'Design Systems'
+    'Design Systems',
   ];
 
   @override
@@ -43,10 +43,7 @@ class InterestsView  extends ConsumerWidget{
                 alignment: Alignment.centerLeft,
                 child: Text(
                   'Personalise your\nexperience',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w800
-                  ),
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.w800),
                 ),
               ),
               const SizedBox(height: 12),
@@ -55,9 +52,7 @@ class InterestsView  extends ConsumerWidget{
                 alignment: Alignment.centerLeft,
                 child: Text(
                   'Choose your interests.',
-                  style: TextStyle(
-                    color: Color(0XFF71727A)
-                  ),
+                  style: TextStyle(color: Color(0XFF71727A)),
                 ),
               ),
 
@@ -66,39 +61,39 @@ class InterestsView  extends ConsumerWidget{
               Expanded(
                 child: ListView.builder(
                   itemCount: interests.length,
-                  itemBuilder: (context, index){
+                  itemBuilder: (context, index) {
                     final item = interests[index];
                     final isSelected = selected.contains(item);
 
                     return Padding(
-                      padding: const EdgeInsets.only(bottom:12),
+                      padding: const EdgeInsets.only(bottom: 12),
                       child: GestureDetector(
-                        onTap: (){
+                        onTap: () {
                           ref
-                            .read(selectedInterestsProvider.notifier)
-                            .toggleInterest(item);
+                              .read(selectedInterestsProvider.notifier)
+                              .toggleInterest(item);
                         },
                         child: Container(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 18,
-                            vertical: 18
+                            vertical: 18,
                           ),
                           decoration: BoxDecoration(
                             color: isSelected
-                              ? const Color(0xFFEAF2FF)
-                              : Colors.white,
-                            border: Border.all(
-                              color: Color(0xFFC5C6CC)
-                            ),
+                                ? const Color(0xFFEAF2FF)
+                                : Colors.white,
+                            border: Border.all(color: Color(0xFFC5C6CC)),
                             borderRadius: BorderRadius.circular(14),
                           ),
                           child: Row(
-                            mainAxisAlignment:
-                              MainAxisAlignment.spaceBetween,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(item),
-                              if(isSelected)
-                                const Icon(Icons.check, color: Color(0xFF006FFD),),
+                              if (isSelected)
+                                const Icon(
+                                  Icons.check,
+                                  color: Color(0xFF006FFD),
+                                ),
                             ],
                           ),
                         ),

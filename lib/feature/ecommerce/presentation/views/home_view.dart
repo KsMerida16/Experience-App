@@ -59,7 +59,10 @@ class _HomeViewState extends ConsumerState<HomeView> {
         actions: [
           if (isAdmin)
             IconButton(
-              icon: const Icon(Icons.admin_panel_settings_outlined, color: Color(0xFF006FFD)),
+              icon: const Icon(
+                Icons.admin_panel_settings_outlined,
+                color: Color(0xFF006FFD),
+              ),
               tooltip: 'Gestionar productos',
               onPressed: () {
                 context.pushNamed(Routes.adminProducts);
@@ -142,7 +145,10 @@ class _HomeViewState extends ConsumerState<HomeView> {
         },
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.explore), label: 'Explore'),
-          BottomNavigationBarItem(icon: Icon(Icons.grid_view), label: 'Categories'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.grid_view),
+            label: 'Categories',
+          ),
           BottomNavigationBarItem(icon: Icon(Icons.store), label: 'Stores'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
         ],
@@ -154,12 +160,18 @@ class _HomeViewState extends ConsumerState<HomeView> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(title, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+        Text(
+          title,
+          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
         TextButton(
           onPressed: () {},
           child: const Text(
             'See more',
-            style: TextStyle(color: Color(0xFF006FFD), fontWeight: FontWeight.w600),
+            style: TextStyle(
+              color: Color(0xFF006FFD),
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
       ],
