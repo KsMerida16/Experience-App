@@ -1,10 +1,3 @@
-"""
-Lee una venta de Firestore, obtiene el usuario asociado,
-recupera sus tokens FCM y envía una notificación push.
-
-Adaptado para Experience-App.
-"""
-
 import sys
 import warnings
 from pathlib import Path

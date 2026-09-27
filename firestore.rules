@@ -1,0 +1,55 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAdmin() {
+      return request.auth != null &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'administrador';
+    }
+
+    match /users/{userId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+
+      allow create: if request.auth != null &&
+        request.auth.uid == userId &&
+        request.resource.data.role == 'user';
+
+      allow update: if request.auth != null &&
+        request.auth.uid == userId &&
+        request.resource.data.role == resource.data.role;
+
+      allow delete: if false;
+
+      // Tarjetas
+      match /cards/{cardId} {
+        allow read, create, update, delete:
+          if request.auth != null && request.auth.uid == userId;
+      }
+
+      // Transacciones
+      match /transactions/{txId} {
+        allow read, create:
+          if request.auth != null && request.auth.uid == userId;
+
+        allow update, delete: if false;
+      }
+    }
+
+    match /products/{productId} {
+      allow read: if request.auth != null;
+      allow create, update, delete: if isAdmin();
+    }
+
+    // Ventas
+    match /sales/{saleId} {
+      allow create: if request.auth != null &&
+        request.auth.uid == request.resource.data.user_id;
+
+      allow read: if request.auth != null &&
+        request.auth.uid == resource.data.user_id;
+
+      allow update, delete: if false;
+    }
+  }
+}

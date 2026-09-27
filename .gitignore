@@ -47,3 +47,5 @@ app.*.map.json
 
 # Firebase / Google Cloud credentials
 backend/serviceAccountKey.json
+
+emulator-data/ .
