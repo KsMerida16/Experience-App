@@ -43,11 +43,17 @@ service cloud.firestore {
 
     // Ventas
     match /sales/{saleId} {
-      allow create: if request.auth != null &&
-        request.auth.uid == request.resource.data.user_id;
 
-      allow read: if request.auth != null &&
-        request.auth.uid == resource.data.user_id;
+      allow create:
+        if request.auth != null &&
+          request.auth.uid == request.resource.data.user_id;
+
+      allow read:
+        if request.auth != null &&
+          (
+            request.auth.uid == resource.data.user_id ||
+            isAdmin()
+          );
 
       allow update, delete: if false;
     }

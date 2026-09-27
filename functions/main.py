@@ -6,8 +6,6 @@ set_global_options(max_instances=10)
 
 initialize_app()
 
-db = firestore.client()
-
 COLECCION_VENTAS = "sales"
 COLECCION_USUARIOS = "users"
 CAMPO_USUARIO = "user_id"
@@ -18,17 +16,12 @@ CAMPO_TOKENS = "fcm_tokens"
 def on_sale_created(
     event: firestore_fn.Event[firestore_fn.DocumentSnapshot],
 ) -> None:
-    """
-    Trigger de Firestore: se ejecuta automáticamente cuando se crea
-    un nuevo documento en 'sales'. Envía una notificación push al
-    usuario dueño de la venta.
-    """
-    print("----------------------------------------")
-    print("SE ESTÁ EJECUTANDO el trigger de venta")
-    print("----------------------------------------")
+    db = firestore.client()
 
     sale_id = event.params["saleId"]
     sale_data = event.data.to_dict() if event.data else None
+
+    print(f"[+] Trigger disparado para la venta: {sale_id}")
 
     if not sale_data:
         print(f"[!] La venta {sale_id} no tiene datos")
@@ -90,8 +83,4 @@ def on_sale_created(
 
 @https_fn.on_request()
 def ping(req: https_fn.Request) -> https_fn.Response:
-    """
-    Función HTTP de prueba (equivalente a la de la clase) para
-    comprobar rápidamente que el emulador o el despliegue funcionan.
-    """
     return https_fn.Response("Experience-App functions OK")
